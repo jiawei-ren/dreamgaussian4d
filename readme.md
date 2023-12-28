@@ -20,14 +20,16 @@ Jiawei Ren<sup>*</sup>&emsp;Liang Pan<sup>*</sup>&emsp;Jiaxiang Tang&emsp;Chi Zh
 </div>
 
 <div>
-<a target="_blank" href="https://arxiv.org/abs/2312.04559">
+<!-- <a target="_blank" href="https://arxiv.org/abs/2312.04559">
   <img src="https://img.shields.io/badge/arXiv-2312.04559-b31b1b.svg" alt="arXiv Paper"/>
-</a>
-<a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FFrozenBurning%2FPrimDiffusion&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+</a> -->
+<a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fjiawei-ren%2Fdreamgaussian4d&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
 </div>
 
 
-https://github.com/zcmcxm/DreamGaussian4D/assets/72253125/d492f896-ac69-45ac-8613-4ec2dfdef1c2
+https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/6c3d884a-d5c1-465d-b450-a89ad6c945c8
+
+
 
 ---
 
@@ -76,7 +78,16 @@ python main_4d.py --config configs/4d.yaml input=data/anya_rgba.png save_path=an
 # UV optimization
 python main2_4d.py --config configs/4d_svd.yaml input=data/anya_rgba.png save_path=anya
 ```
-to turn on viser GUI, add `gui=True`.
+
+To turn on viser GUI, add `gui=True`:
+```bash
+python main.py --config configs/image.yaml input=data/anya_rgba.png save_path=anya gui=True
+```
+
+To load the exported mesh in Blender, please install the [Stop-motion-OBJ
+](https://github.com/neverhood311/Stop-motion-OBJ) add-on, and tick `Material per Frame`.
+<img width="336" alt="Screenshot 2023-12-28 at 7 08 58 PM" src="https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/9c32436b-bbf9-432b-9bcb-3d3bcb3c1866">
+
 
 ## Acknowledgement
 

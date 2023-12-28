@@ -25,5 +25,3 @@ data*/
 
 
 *.sh
-
-!vis_data/.gitkeep

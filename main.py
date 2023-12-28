@@ -516,8 +516,8 @@ class GUI:
             pose = orbit_camera(self.opt.elevation, hor-180, self.opt.radius)
             cur_cam = MiniCam(
                 pose,
-                256,
-                256,
+                512,
+                512,
                 self.cam.fovy,
                 self.cam.fovx,
                 self.cam.near,

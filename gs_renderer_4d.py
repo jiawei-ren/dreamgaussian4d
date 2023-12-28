@@ -10,7 +10,6 @@ from diff_gaussian_rasterization import (
 
 from sh_utils import eval_sh, SH2RGB, RGB2SH
 
-# from gaussian_model import GaussianModel, BasicPointCloud
 from gaussian_model_4d import GaussianModel, BasicPointCloud
 
 def getProjectionMatrix(znear, zfar, fovX, fovY):
@@ -170,36 +169,8 @@ class Renderer:
         if compute_cov3D_python:
             cov3D_precomp = self.gaussians.get_covariance(scaling_modifier)
         else:
-            # scales = self.gaussians.get_scaling
-            # rotations = self.gaussians.get_rotation
             scales = self.gaussians._scaling
             rotations = self.gaussians._rotation
-
-        # deformation_point = self.gaussians._deformation_table # torch.empty(0)
-        # means3D_deform, scales_deform, rotations_deform, opacity_deform = self.gaussians._deformation(means3D[deformation_point], scales[deformation_point], 
-        #                                                     rotations[deformation_point], opacity[deformation_point],
-        #                                                     time[deformation_point]) #  time is not none
-
-        # with torch.no_grad():
-        #     self.gaussians._deformation_accum[deformation_point] += torch.abs(means3D_deform-means3D[deformation_point])
-
-        # means3D_final = torch.zeros_like(means3D)
-        # rotations_final = torch.zeros_like(rotations)
-        # scales_final = torch.zeros_like(scales)
-        # opacity_final = torch.zeros_like(opacity)
-        # means3D_final[deformation_point] =  means3D_deform
-        # rotations_final[deformation_point] =  rotations_deform
-        
-        # scales_final[deformation_point] =  scales_deform
-        # opacity_final[deformation_point] = opacity_deform
-        # # scales_final[deformation_point] =  scales[deformation_point]
-        # # opacity_final[deformation_point] = opacity[deformation_point]
-        
-
-        # means3D_final[~deformation_point] = means3D[~deformation_point]
-        # rotations_final[~deformation_point] = rotations[~deformation_point]
-        # scales_final[~deformation_point] = scales[~deformation_point]
-        # opacity_final[~deformation_point] = opacity[~deformation_point]
 
         means3D_deform, scales_deform, rotations_deform, opacity_deform = self.gaussians._deformation(means3D, scales, 
                                                             rotations, opacity,

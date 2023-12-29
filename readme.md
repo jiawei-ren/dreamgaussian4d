@@ -27,7 +27,10 @@ Jiawei Ren<sup>*</sup>&emsp;Liang Pan<sup>*</sup>&emsp;Jiaxiang Tang&emsp;Chi Zh
 </div>
 
 
-https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/6c3d884a-d5c1-465d-b450-a89ad6c945c8
+
+
+https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/8664c1fe-14b3-42ec-9ee3-e84bfac1f953
+
 
 
 
@@ -64,28 +67,32 @@ pip install git+https://github.com/ashawkey/kiuikit
 ```
 
 Tested on:
-*  torch 2.1 & CUDA 11.8 on an A100.
+*  torch 2.1 & CUDA 11.8 on an 80GB A100.
 
 ## Usage
-Image-to-4D:
 ```bash
-# train 500 iters (~2min) and export ckpt & coarse_mesh to logs
-python main.py --config configs/image.yaml input=data/anya_rgba.png save_path=anya
 # generate driving video
 python gen_vid.py --name anya_rgba --seed 42 --bg white
-# temporal optimization stage
-python main_4d.py --config configs/4d.yaml input=data/anya_rgba.png save_path=anya
-# UV optimization
-python main2_4d.py --config configs/4d_svd.yaml input=data/anya_rgba.png save_path=anya
-```
 
-To turn on viser GUI, add `gui=True`:
-```bash
+# Stage I: train 500 iters (~2min) and export ckpt & coarse_mesh to logs
+python main.py --config configs/image.yaml input=data/anya_rgba.png save_path=anya
+
+# Stage II: temporal optimization stage
+python main_4d.py --config configs/4d.yaml input=data/anya_rgba.png save_path=anya
+
+# Stage III: texture optimization (optional, it requires large GPU memory and we are optimzing it)
+python main2_4d.py --config configs/4d_svd.yaml input=data/anya_rgba.png save_path=anya
+
+# to turn on viser GUI, add `gui=True`, e.g.:
 python main.py --config configs/image.yaml input=data/anya_rgba.png save_path=anya gui=True
 ```
+Meshes will be automatically exported to `logs` in Stage II. Visulizations will be saved to `vis_data`.
 
-To load the exported mesh in Blender, please install the [Stop-motion-OBJ
-](https://github.com/neverhood311/Stop-motion-OBJ) add-on, and tick `Material per Frame`.
+## Load exported meshes in Blender
+- Install the [Stop-motion-OBJ
+](https://github.com/neverhood311/Stop-motion-OBJ) add-on
+- File -> Import -> Mesh Sequence
+- Go to `logs` directory, type in the file name (e.g., 'anya'), and tick `Material per Frame`.
 <img width="336" alt="Screenshot 2023-12-28 at 7 08 58 PM" src="https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/9c32436b-bbf9-432b-9bcb-3d3bcb3c1866">
 
 

@@ -35,7 +35,7 @@ https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/6c3d884a-d5c1-465d
 
 <h4 align="center">
   <a href="https://jiawei-ren.github.io/projects/dreamgaussian4d/" target='_blank'>[Project Page]</a> •
-  <a href="https://openreview.net/pdf?id=hXevuspQnX" target='_blank'>[Paper]</a>
+  <a href="https://arxiv.org/abs/2312.17142" target='_blank'>[Paper]</a>
 
 </h4>
 

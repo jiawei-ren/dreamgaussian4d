@@ -205,10 +205,9 @@ class GUI:
             # ver_init = np.random.randint(min_ver, max_ver)
             ver_init = 0
             hor_init = np.random.randint(-180, 180)
-            # USE_OOM_HACK = self.enable_svd # todo: hack to avoid OOM 
-            USE_OOM_HACK = False # todo: hack to avoid OOM 
+            USE_OOM_HACK = self.opt.oom_hack # todo: hack to avoid OOM 
             max_bs = 8 if USE_OOM_HACK else self.opt.batch_size
-            b_idx_init = np.random.randint(0, 14-max_bs+1)
+            b_idx_init = np.random.randint(0, self.opt.batch_size-max_bs+1)
             for i in range(max_bs):
                 b_idx = b_idx_init + i
                 # render random view

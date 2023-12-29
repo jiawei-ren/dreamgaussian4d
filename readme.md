@@ -71,7 +71,10 @@ pip install git+https://github.com/ashawkey/kiuikit
 ```
 
 Tested on:
-*  torch 2.1 & CUDA 11.8 on an 80GB A100.
+*  python 3.8 & torch 2.1 & CUDA 11.8 on an 80GB A100.
+    * Stage I: 2min. Stage II: 4.5min. Stage III: 3.5min.
+*  python 3.8 & torch 2.0 & CUDA 11.6 on an 24GB A5000.
+    *  Stage I: 4.5min. Stage II: 9min. Stage III: 5.5min with `oom_hack`.
 
 ## Usage
 ```bash
@@ -81,7 +84,7 @@ python gen_vid.py --name anya_rgba --seed 42 --bg white
 # Stage I: train 500 iters (~2min) and export ckpt & coarse_mesh to logs
 python main.py --config configs/image.yaml input=data/anya_rgba.png save_path=anya
 
-# Stage II: temporal optimization stage
+# Stage II: temporal optimization stage (export meshes by default)
 python main_4d.py --config configs/4d.yaml input=data/anya_rgba.png save_path=anya
 
 # Stage III: texture optimization (optional, it requires large GPU memory and we are optimzing it)
@@ -98,6 +101,14 @@ Meshes will be automatically exported to `logs` in Stage II. Visulizations will 
 - File -> Import -> Mesh Sequence
 - Go to `logs` directory, type in the file name (e.g., 'anya'), and tick `Material per Frame`.
 <img width="336" alt="Screenshot 2023-12-28 at 7 08 58 PM" src="https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/9c32436b-bbf9-432b-9bcb-3d3bcb3c1866">
+
+## Tips
+
+- CUDA OOM.
+    - Stage I: Reduce [batch_size](https://github.com/jiawei-ren/dreamgaussian4d/blob/main/configs/image.yaml#L26) to 4.
+    - Stage II: Reduce [n_views](https://github.com/jiawei-ren/dreamgaussian4d/blob/main/configs/4d.yaml#L43) to 1.
+    - Stage III: Add argument `oom_hack=True` or disable SVD by setting [lambda_svd](https://github.com/jiawei-ren/dreamgaussian4d/blob/main/configs/4d_svd.yaml#L25) to 0.
+
 
 
 ## Acknowledgement

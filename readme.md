@@ -29,7 +29,11 @@ Jiawei Ren<sup>*</sup>&emsp;Liang Pan<sup>*</sup>&emsp;Jiaxiang Tang&emsp;Chi Zh
 
 
 
-https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/8664c1fe-14b3-42ec-9ee3-e84bfac1f953
+
+https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/8fdadc58-1ad8-4664-a6f8-70e20c612c10
+
+
+
 
 
 

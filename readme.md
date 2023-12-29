@@ -16,13 +16,13 @@ Jiawei Ren<sup>*</sup>&emsp;Liang Pan<sup>*</sup>&emsp;Jiaxiang Tang&emsp;Chi Zh
 
 
 <div>
-   <strong>Preprint 2023</strong>
+   <strong>Arxiv 2023</strong>
 </div>
 
 <div>
-<!-- <a target="_blank" href="https://arxiv.org/abs/2312.04559">
-  <img src="https://img.shields.io/badge/arXiv-2312.04559-b31b1b.svg" alt="arXiv Paper"/>
-</a> -->
+<a target="_blank" href="https://arxiv.org/abs/2312.17142">
+  <img src="https://img.shields.io/badge/arXiv-2312.17142-b31b1b.svg" alt="arXiv Paper"/>
+</a>
 <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fjiawei-ren%2Fdreamgaussian4d&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
 </div>
 
@@ -97,4 +97,15 @@ This work is built on many amazing research works and open-source projects, than
 * [gaussian-splatting](https://github.com/graphdeco-inria/gaussian-splatting) and [diff-gaussian-rasterization](https://github.com/graphdeco-inria/diff-gaussian-rasterization)
 * [threestudio](https://github.com/threestudio-project/threestudio)
 * [nvdiffrast](https://github.com/NVlabs/nvdiffrast)
+
+## Citation
+
+```
+@article{ren2023dreamgaussian4d,
+  title={DreamGaussian4D: Generative 4D Gaussian Splatting},
+  author={Ren, Jiawei and Pan, Liang and Tang, Jiaxiang and Zhang, Chi and Cao, Ang and Zeng, Gang and Liu, Ziwei},
+  journal={arXiv preprint arXiv:2312.17142},
+  year={2023}
+}
+```
 

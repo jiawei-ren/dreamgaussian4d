@@ -100,7 +100,9 @@ Meshes will be automatically exported to `logs` in Stage II. Visulizations will 
 ](https://github.com/neverhood311/Stop-motion-OBJ) add-on
 - File -> Import -> Mesh Sequence
 - Go to `logs` directory, type in the file name (e.g., 'anya'), and tick `Material per Frame`.
-<img width="336" alt="Screenshot 2023-12-28 at 7 08 58 PM" src="https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/9c32436b-bbf9-432b-9bcb-3d3bcb3c1866">
+
+https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/a558a475-e2db-4cdf-9bbf-e0e8d031e232
+
 
 ## Tips
 

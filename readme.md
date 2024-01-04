@@ -110,6 +110,9 @@ https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/a558a475-e2db-4cdf
     - Stage I: Reduce [batch_size](https://github.com/jiawei-ren/dreamgaussian4d/blob/main/configs/image.yaml#L26) to 4.
     - Stage II: Reduce [n_views](https://github.com/jiawei-ren/dreamgaussian4d/blob/main/configs/4d.yaml#L43) to 1.
     - Stage III: Add argument `oom_hack=True` or disable SVD by setting [lambda_svd](https://github.com/jiawei-ren/dreamgaussian4d/blob/main/configs/4d_svd.yaml#L25) to 0.
+ 
+- Black video after running `gen_vid.py`.
+    - Make sure pytorch version is >=2.0 
 
 
 

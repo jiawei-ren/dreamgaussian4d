@@ -28,7 +28,7 @@ lambda_zero123: 1
 stable_zero123: True 
 lambda_svd: 0
 # training batch size per iter
-batch_size: 14
+batch_size: 32
 # training iterations for stage 1
 iters: 500
 # training iterations for stage 2
@@ -106,7 +106,7 @@ deformation:
         grid_dimensions: 2
         input_coordinate_dim: 4
         output_coordinate_dim: 32
-        resolution: [32, 32, 32, 12]
+        resolution: [32, 32, 32, 32]
     multires: [1]
     no_grid: False
     no_mlp: False
@@ -115,7 +115,5 @@ deformation:
     no_do: True
     use_res: True
 
-data_mode: svd
+data_mode: c4d
 downsample_rate: 1
-# data_mode: c4d
-# downsample_rate: 2

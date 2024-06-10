@@ -61,23 +61,27 @@ class MiniCam:
 
 
 class Renderer:
-    def __init__(self, sh_degree=3, white_background=True, radius=1):
+    def __init__(self, opt, sh_degree=3, white_background=True, radius=1):
         
         self.sh_degree = sh_degree
         self.white_background = white_background
         self.radius = radius
+        self.opt = opt
+        self.T = self.opt.batch_size
 
-        # self.gaussians = GaussianModel(sh_degree)
-
-        from arguments import ModelHiddenParams
-        hyper = ModelHiddenParams(None) # args
-        self.gaussians = GaussianModel(sh_degree, hyper)
+        self.gaussians = GaussianModel(sh_degree, opt.deformation)
 
         self.bg_color = torch.tensor(
             [1, 1, 1] if white_background else [0, 0, 0],
             dtype=torch.float32,
             device="cuda",
         )
+        self.means3D_deform_T = None
+        self.opacity_deform_T = None
+        self.scales_deform_T = None
+        self.rotations_deform_T = None
+
+
     
     def initialize(self, input=None, num_pts=5000, radius=0.5):
         # load checkpoint
@@ -107,6 +111,46 @@ class Renderer:
         else:
             # load from saved ply
             self.gaussians.load_ply(input)
+
+    def prepare_render(
+        self,
+    ):
+        means3D = self.gaussians.get_xyz
+        opacity = self.gaussians._opacity
+        scales = self.gaussians._scaling
+        rotations = self.gaussians._rotation
+
+        means3D_T = []
+        opacity_T = []
+        scales_T = []
+        rotations_T = []
+        time_T = []
+
+        for t in range(self.T):
+            time = torch.tensor(t).to(means3D.device).repeat(means3D.shape[0],1)
+            time = ((time.float() / self.T) - 0.5) * 2
+
+            means3D_T.append(means3D)
+            opacity_T.append(opacity)
+            scales_T.append(scales)
+            rotations_T.append(rotations)
+            time_T.append(time)
+
+        means3D_T = torch.cat(means3D_T)
+        opacity_T = torch.cat(opacity_T)
+        scales_T = torch.cat(scales_T)
+        rotations_T = torch.cat(rotations_T)
+        time_T = torch.cat(time_T)
+
+
+        means3D_deform_T, scales_deform_T, rotations_deform_T, opacity_deform_T = self.gaussians._deformation(means3D_T, scales_T, 
+                                                            rotations_T, opacity_T,
+                                                            time_T) #  time is not none
+        self.means3D_deform_T = means3D_deform_T.reshape([self.T, means3D_deform_T.shape[0]//self.T, -1])
+        self.opacity_deform_T = opacity_deform_T.reshape([self.T, means3D_deform_T.shape[0]//self.T, -1])
+        self.scales_deform_T = scales_deform_T.reshape([self.T, means3D_deform_T.shape[0]//self.T, -1])
+        self.rotations_deform_T = rotations_deform_T.reshape([self.T, means3D_deform_T.shape[0]//self.T, -1])
+        
 
     def render(
         self,
@@ -155,10 +199,9 @@ class Renderer:
 
         means3D = self.gaussians.get_xyz
         time = torch.tensor(viewpoint_camera.time).to(means3D.device).repeat(means3D.shape[0],1)
-        time = (time.float()  - 4) / 10 # hack
+        time = ((time.float() / self.T) - 0.5) * 2
 
         means2D = screenspace_points
-        # opacity = self.gaussians.get_opacity
         opacity = self.gaussians._opacity
 
         # If precomputed 3d covariance is provided, use it. If not, then it will be computed from
@@ -172,18 +215,13 @@ class Renderer:
             scales = self.gaussians._scaling
             rotations = self.gaussians._rotation
 
-        means3D_deform, scales_deform, rotations_deform, opacity_deform = self.gaussians._deformation(means3D, scales, 
-                                                            rotations, opacity,
-                                                            time) #  time is not none
+        means3D_deform, scales_deform, rotations_deform, opacity_deform = self.means3D_deform_T[viewpoint_camera.time], self.scales_deform_T[viewpoint_camera.time], self.rotations_deform_T[viewpoint_camera.time], self.opacity_deform_T[viewpoint_camera.time]
 
-        means3D_final = torch.zeros_like(means3D)
-        rotations_final = torch.zeros_like(rotations)
-        scales_final = torch.zeros_like(scales)
-        opacity_final = torch.zeros_like(opacity)
-        means3D_final =  means3D_deform
-        rotations_final =  rotations_deform
-        scales_final =  scales_deform
-        opacity_final = opacity_deform
+
+        means3D_final =  means3D + means3D_deform
+        rotations_final =  rotations + rotations_deform
+        scales_final =  scales + scales_deform
+        opacity_final = opacity + opacity_deform
 
 
 
@@ -213,7 +251,6 @@ class Renderer:
                 shs = self.gaussians.get_features
         else:
             colors_precomp = override_color
-
 
         rendered_image, radii, rendered_depth, rendered_alpha = rasterizer(
         means3D = means3D_final,

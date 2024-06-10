@@ -62,22 +62,15 @@ def decimate_mesh(
         ms.add_mesh(m, "mesh")  # will copy!
 
         # filters
-        # ms.meshing_decimation_clustering(threshold=pml.Percentage(1))
-        # ms.meshing_decimation_quadric_edge_collapse(
-        #     targetfacenum=int(target), optimalplacement=optimalplacement
-        # )
-        ms.simplification_quadric_edge_collapse_decimation(
+        # ms.meshing_decimation_clustering(threshold=pml.PercentageValue(1))
+        ms.meshing_decimation_quadric_edge_collapse(
             targetfacenum=int(target), optimalplacement=optimalplacement
         )
 
         if remesh:
             # ms.apply_coord_taubin_smoothing()
-            # ms.meshing_isotropic_explicit_remeshing(
-            #     iterations=3, targetlen=pml.Percentage(1)
-            # )
-            ms.remeshing_isotropic_explicit_remeshing(
-                iterations=3, 
-                targetlen=pml.Percentage(1)
+            ms.meshing_isotropic_explicit_remeshing(
+                iterations=3, targetlen=pml.PercentageValue(1)
             )
 
         # extract mesh
@@ -113,51 +106,34 @@ def clean_mesh(
     ms.add_mesh(m, "mesh")  # will copy!
 
     # filters
-    # ms.meshing_remove_unreferenced_vertices()  # verts not refed by any faces
-    ms.remove_unreferenced_vertices()
+    ms.meshing_remove_unreferenced_vertices()  # verts not refed by any faces
 
     if v_pct > 0:
-        # ms.meshing_merge_close_vertices(
-        #     threshold=pml.Percentage(v_pct)
-        # )  # 1/10000 of bounding box diagonal
-        ms.merge_close_vertices(
-            threshold=pml.Percentage(v_pct)
-            )
+        ms.meshing_merge_close_vertices(
+            threshold=pml.PercentageValue(v_pct)
+        )  # 1/10000 of bounding box diagonal
 
-    # ms.meshing_remove_duplicate_faces()  # faces defined by the same verts
-    ms.remove_duplicate_faces()
-    # ms.meshing_remove_null_faces()  # faces with area == 0
-    ms.remove_zero_area_faces()
+    ms.meshing_remove_duplicate_faces()  # faces defined by the same verts
+    ms.meshing_remove_null_faces()  # faces with area == 0
 
     if min_d > 0:
-        # ms.meshing_remove_connected_component_by_diameter(
-        #     mincomponentdiag=pml.Percentage(min_d)
-        # )
-        ms.remove_isolated_pieces_wrt_diameter(
-            mincomponentdiag=pml.Percentage(min_d)
+        ms.meshing_remove_connected_component_by_diameter(
+            mincomponentdiag=pml.PercentageValue(min_d)
         )
 
     if min_f > 0:
-        # ms.meshing_remove_connected_component_by_face_number(mincomponentsize=min_f)
-        ms.remove_isolated_pieces_wrt_face_num(mincomponentsize=min_f)
+        ms.meshing_remove_connected_component_by_face_number(mincomponentsize=min_f)
 
     if repair:
         # ms.meshing_remove_t_vertices(method=0, threshold=40, repeat=True)
-        # ms.meshing_repair_non_manifold_edges(method=0)
-        ms.repair_non_manifold_edges_by_removing_faces()
-        # ms.meshing_repair_non_manifold_vertices(vertdispratio=0)
-        ms.repair_non_manifold_vertices_by_splitting(vertdispratio=0)
+        ms.meshing_repair_non_manifold_edges(method=0)
+        ms.meshing_repair_non_manifold_vertices(vertdispratio=0)
 
     if remesh:
         # ms.apply_coord_taubin_smoothing()
-        # ms.meshing_isotropic_explicit_remeshing(
-        #     iterations=3, targetlen=pml.AbsoluteValue(remesh_size)
-        # )
-         ms.remeshing_isotropic_explicit_remeshing(
-            iterations=3, 
-            targetlen=pml.Percentage(1)
+        ms.meshing_isotropic_explicit_remeshing(
+            iterations=3, targetlen=pml.PureValue(remesh_size)
         )
-
 
     # extract mesh
     m = ms.current_mesh()

@@ -12,8 +12,8 @@ import rembg
 
 from cam_utils import orbit_camera, OrbitCamera
 from mesh_renderer_4d import Renderer
+import imageio
 
-# from kiui.lpips import LPIPS
 
 class GUI:
     def __init__(self, opt):
@@ -68,7 +68,6 @@ class GUI:
         self.optimizer = None
         self.step = 0
         self.train_steps = 1  # steps per rendering loop
-        # self.lpips_loss = LPIPS(net='vgg').to(self.device)
         
         # load input data from cmdline
         if self.opt.input is not None:
@@ -123,10 +122,13 @@ class GUI:
                 self.guidance_sd = StableDiffusion(self.device)
                 print(f"[INFO] loaded SD!")
 
-        if self.guidance_zero123 is None and self.enable_zero123: # True
+        if self.guidance_zero123 is None and self.enable_zero123:
             print(f"[INFO] loading zero123...")
             from guidance.zero123_utils import Zero123
-            self.guidance_zero123 = Zero123(self.device)
+            if self.opt.stable_zero123:
+                self.guidance_zero123 = Zero123(self.device, model_key='ashawkey/stable-zero123-diffusers')
+            else:
+                self.guidance_zero123 = Zero123(self.device, model_key='ashawkey/zero123-xl-diffusers')
             print(f"[INFO] loaded zero123!")
 
 
@@ -183,7 +185,7 @@ class GUI:
             loss = 0
 
             ### known view
-            for b_idx in range(self.opt.batch_size): # 14
+            for b_idx in range(self.opt.batch_size):
 
                 ssaa = min(2.0, max(0.125, 2 * np.random.random()))
                 out = self.renderer.render(b_idx, *self.fixed_cam, self.opt.ref_size, self.opt.ref_size, ssaa=ssaa)
@@ -298,10 +300,17 @@ class GUI:
         t = starter.elapsed_time(ender)
 
         self.need_update = True
-    
+
     def load_input(self, file):
         self.load_input_single(file)
-        file_list = [file.replace('.png', f'_{x:03d}.png') for x in range(self.opt.batch_size)]
+        if self.opt.data_mode == 'c4d':
+            file_list = [os.path.join(file, f'{x * self.opt.downsample_rate}.png') for x in range(self.opt.batch_size)] 
+        elif self.opt.data_mode == 'svd':
+            # file_list = [file.replace('.png', f'_frames/{x* self.opt.downsample_rate:03d}_rgba.png') for x in range(self.opt.batch_size)]
+            # file_list = [x if os.path.exists(x) else (x.replace('_rgba.png', '.png')) for x in file_list]
+            file_list = [file.replace('.png', f'_frames/{x* self.opt.downsample_rate:03d}.png') for x in range(self.opt.batch_size)]
+        else:
+            raise NotImplementedError
         self.input_img_list, self.input_mask_list = [], []
         for file in file_list:
             # load image
@@ -311,7 +320,7 @@ class GUI:
                 if self.bg_remover is None:
                     self.bg_remover = rembg.new_session()
                 img = rembg.remove(img, session=self.bg_remover)
-                cv2.imwrite(file, img) 
+                # cv2.imwrite(file.replace('.png', '_rgba.png'), img) 
             img = cv2.resize(img, (self.W, self.H), interpolation=cv2.INTER_AREA)
             img = img.astype(np.float32) / 255.0
             input_mask = img[..., 3:]
@@ -321,6 +330,7 @@ class GUI:
             input_img = input_img[..., ::-1].copy()
             self.input_img_list.append(input_img)
             self.input_mask_list.append(input_mask)
+
 
     def load_input_single(self, file):
         # load image
@@ -357,19 +367,12 @@ class GUI:
     
     # no gui mode
     def train(self, iters=500):
-        # from visergui import ViserViewer2
-        # self.viser_gui = ViserViewer2(device="cuda", viewer_port=8080)
         if iters > 0:
             self.prepare_train()
-            # self.viser_gui.set_renderer(self.renderer, self.fixed_cam)
             
-            for i in tqdm.trange(iters): # 500
+            for i in tqdm.trange(iters):
                 self.train_step()
-                # self.viser_gui.update()
         image_list =[]
-        from PIL import Image
-        from diffusers.utils import export_to_video, export_to_gif
-        self.prepare_train()
         nframes = self.opt.batch_size *5
         hor = 180
         delta_hor = 360 / nframes
@@ -382,19 +385,14 @@ class GUI:
             outputs = self.renderer.render(time, pose, self.cam.perspective, render_resolution, render_resolution)
 
             out = outputs["image"].cpu().detach().numpy().astype(np.float32)
-            # out = np.transpose(out, (1, 2, 0))
-            out = Image.fromarray(np.uint8(out*255))
+            out = np.uint8(out*255)
             image_list.append(out)
 
             time = (time + delta_time) % self.opt.batch_size
             hor = (hor+delta_hor) % 360
 
-        export_to_gif(image_list, f'vis_data/{opt.save_path}_refined.gif')
-        # save
+        imageio.mimwrite(f'vis_data/{opt.save_path}_refined.mp4', image_list, fps=7)
         self.save_model()
-        # while True:
-        #     self.viser_gui.update()
-
         
 
 if __name__ == "__main__":
@@ -407,15 +405,12 @@ if __name__ == "__main__":
 
     # override default config from cli
     opt = OmegaConf.merge(OmegaConf.load(args.config), OmegaConf.from_cli(extras))
+    opt.save_path = os.path.splitext(os.path.basename(opt.input))[0] if opt.save_path == '' else opt.save_path
 
     # auto find mesh from stage 1
     if opt.mesh is None:
-        default_path = os.path.join(opt.outdir, opt.save_path + '_mesh.' + opt.mesh_format)
+        default_path = os.path.join(opt.outdir, opt.save_path + '_meshes/')
         opt.mesh = default_path
-        # if os.path.exists(default_path):
-        #     opt.mesh = default_path
-        # else:
-        #     raise ValueError(f"Cannot find mesh from {default_path}, must specify --mesh explicitly!")
 
     gui = GUI(opt)
     gui.train(opt.iters_refine)

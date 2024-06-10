@@ -28,7 +28,7 @@ lambda_zero123: 1
 stable_zero123: True 
 lambda_svd: 0
 # training batch size per iter
-batch_size: 14
+batch_size: 7
 # training iterations for stage 1
 iters: 500
 # training iterations for stage 2
@@ -47,7 +47,7 @@ load:
 train_geo: False
 # prob to invert background color during training (0 = always black, 1 = always white)
 invert_bg_prob: 0.
-n_views: 4
+n_views: 1
 t_max: 0.5
 
 
@@ -116,6 +116,6 @@ deformation:
     use_res: True
 
 data_mode: svd
-downsample_rate: 1
+downsample_rate: 2
 # data_mode: c4d
 # downsample_rate: 2

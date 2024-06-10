@@ -1,8 +1,7 @@
 import torch
 
-from diffusers import StableVideoDiffusionPipeline, DDIMScheduler
-# from diffusers.src.diffusers.pipleines.stable_video_diffusion.pipeline_stable_video_diffusion import _resize_with_antialiasing
-from diffusers.utils import load_image, export_to_video, export_to_gif
+from svd import StableVideoDiffusionPipeline
+from diffusers import DDIMScheduler
 
 from PIL import Image
 import numpy as np

@@ -1,5 +1,3 @@
-# torch >= 2.0.0
-torch==2.0.0 
 tqdm
 rich
 ninja
@@ -12,15 +10,21 @@ opencv-python
 imageio
 imageio-ffmpeg
 omegaconf
+kiui
 
 torch
+torchvision
 einops
 plyfile
 pygltflib
 
+# for gui
+viser
+kornia
+
 # for stable-diffusion
 huggingface_hub
-#diffusers >= 0.9.0
+diffusers
 accelerate
 transformers
 
@@ -28,12 +32,14 @@ transformers
 xatlas
 trimesh
 PyMCubes
-pymeshlab==0.2.0
+pymeshlab
 
 rembg[gpu,cli]
 
 # gradio demo
 gradio
+gradio-model4dgs
 
-viser
-kornia
+# LGM
+roma
+

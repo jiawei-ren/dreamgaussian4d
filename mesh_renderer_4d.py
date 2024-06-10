@@ -48,8 +48,8 @@ class Renderer(nn.Module):
 
         self.mesh_list =[]
 
-        for i in range(14):
-            mesh = Mesh.load(self.opt.mesh.replace('.obj', f'_{i:03d}.obj'), resize=False)
+        for i in range(opt.batch_size):
+            mesh = Mesh.load(self.opt.mesh + (f'{i:03d}.obj'), resize=False)
             self.mesh_list.append(mesh)
 
         if not self.opt.force_cuda_rast and (not self.opt.gui or os.name == 'nt'):

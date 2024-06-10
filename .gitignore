@@ -22,6 +22,12 @@ images
 vis_data*/
 logs*/
 data*/
+eval_data*/
 
 
 *.sh
+*.out
+batchscript*
+
+pretrained/
+diff-gaussian-rasterization/

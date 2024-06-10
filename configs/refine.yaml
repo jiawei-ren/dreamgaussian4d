@@ -10,25 +10,23 @@ elevation: 0
 # reference image resolution
 ref_size: 256
 # density thresh for mesh extraction
-density_thresh: 0.5
+density_thresh: 1
 
 ### Output
 outdir: logs
-mesh_format: frames
+mesh_format: obj
 save_path: ''
-save_model: False
 
 ### Training
 # guidance loss weights (0 to disable)
-mvdream: False
-imagedream: False
 lambda_sd: 0
-lambda_zero123: 1
+mvdream: False
+lambda_zero123: 0
 # use stable-zero123 instead of zero123-xl
-stable_zero123: True 
-lambda_svd: 0
+stable_zero123: False 
+lambda_svd: 1
 # training batch size per iter
-batch_size: 14
+batch_size: 1
 # training iterations for stage 1
 iters: 500
 # training iterations for stage 2
@@ -37,18 +35,12 @@ iters_refine: 50
 radius: 1.5
 # training camera fovy
 fovy: 49.1 # align with zero123 rendering setting (ref: https://github.com/cvlab-columbia/zero123/blob/main/objaverse-rendering/scripts/blender_script.py#L61
-# training camera min elevation
-min_ver: -30
-# training camera max elevation
-max_ver: 30
 # checkpoint to load for stage 1 (should be a ply file)
 load:
 # whether allow geom training in stage 2
 train_geo: False
 # prob to invert background color during training (0 = always black, 1 = always white)
-invert_bg_prob: 0.
-n_views: 4
-t_max: 0.5
+invert_bg_prob: 0.5
 
 
 ### GUI
@@ -59,7 +51,8 @@ H: 800
 W: 800
 
 ### Gaussian splatting
-optimize_gaussians: True
+num_pts: 5000
+sh_degree: 0
 position_lr_init: 0.001
 position_lr_final: 0.00002
 position_lr_delay_mult: 0.02
@@ -68,54 +61,19 @@ feature_lr: 0.01
 opacity_lr: 0.05
 scaling_lr: 0.005
 rotation_lr: 0.005
-
-num_pts: 5000
-sh_degree: 0
 percent_dense: 0.1
-density_start_iter: 3000
+density_start_iter: 100
 density_end_iter: 3000
 densification_interval: 100
 opacity_reset_interval: 700
-densify_grad_threshold: 0.05
-
-# deformation field
-deformation_lr_init: 0.00064
-deformation_lr_final: 0.00064
-deformation_lr_delay_mult: 0.01
-grid_lr_init: 0.0064
-grid_lr_final: 0.0064
+densify_grad_threshold: 0.5
 
 ### Textured Mesh
 geom_lr: 0.0001
 texture_lr: 0.2
 
-deformation:
-    net_width: 64
-    timebase_pe: 4
-    defor_depth: 1
-    posebase_pe: 10
-    scale_rotation_pe: 2
-    opacity_pe: 2
-    timenet_width: 64
-    timenet_output: 32
-    bounds: 1.6
-    plane_tv_weight: 0.0001
-    time_smoothness_weight: 0.01
-    l1_time_planes: 0.0001
-    kplanes_config:
-        grid_dimensions: 2
-        input_coordinate_dim: 4
-        output_coordinate_dim: 32
-        resolution: [32, 32, 32, 12]
-    multires: [1]
-    no_grid: False
-    no_mlp: False
-    no_ds: False
-    no_dr: False
-    no_do: True
-    use_res: True
-
+static_model: lgm
 data_mode: svd
-downsample_rate: 1
-# data_mode: c4d
-# downsample_rate: 2
+downsample_rate: 2
+
+oom_hack: False

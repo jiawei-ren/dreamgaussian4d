@@ -47,7 +47,7 @@ load:
 train_geo: False
 # prob to invert background color during training (0 = always black, 1 = always white)
 invert_bg_prob: 0.
-n_views: 4
+n_views: 1
 t_max: 0.5
 
 
@@ -106,7 +106,7 @@ deformation:
         grid_dimensions: 2
         input_coordinate_dim: 4
         output_coordinate_dim: 32
-        resolution: [32, 32, 32, 12]
+        resolution: [32, 32, 32, 22]
     multires: [1]
     no_grid: False
     no_mlp: False

@@ -51,11 +51,10 @@ https://github.com/jiawei-ren/dreamgaussian4d/assets/72253125/8fdadc58-1ad8-4664
 </div>
 
 ### News
-- 2024.6.10: add gradio demo. <a href="https://huggingface.co/spaces/jiawei011/dreamgaussian4d"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Gradio%20Demo-Huggingface-orange"></a>
-
+- 2024.6.10: add Gradio demo. <a href="https://huggingface.co/spaces/jiawei011/dreamgaussian4d"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Gradio%20Demo-Huggingface-orange"></a>
 - 2024.6.9: 
   - support [LGM](https://github.com/3DTopia/LGM) for static 3D generation.
-  - add support for video-to-4d generation and evaluation scripts for the [Consistent4D](https://consistent4d.github.io/) benchmark. Results are in our updated [project page](https://jiawei-ren.github.io/projects/dreamgaussian4d/) and [report](https://arxiv.org/abs/2312.17142).
+  - support video-to-4d generation. Add evaluation scripts for the [Consistent4D](https://consistent4d.github.io/) benchmark. Results are in our updated [project page](https://jiawei-ren.github.io/projects/dreamgaussian4d/) and [report](https://arxiv.org/abs/2312.17142).
   - improve the implementation for better speed and quality. Add a gradio demo for image-to-4d. 
 
 ## Install
